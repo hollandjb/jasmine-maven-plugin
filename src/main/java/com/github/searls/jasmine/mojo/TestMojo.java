@@ -189,14 +189,22 @@ public class TestMojo extends AbstractJasmineMojo {
   @Override
   public void run() throws Exception {
     ServerManager serverManager = this.getServerManager();
+    JasmineResult result;
     try {
-		int port = this.serverPort;
-		serverManager.start(this.serverPort);
-       setPortProperty(port);
-      this.getLog().info("Executing Jasmine Specs");
-      JasmineResult result = this.executeSpecs(new URL(this.uriScheme + "://" + this.serverHostname + ":" + port));
-      this.logResults(result);
-      this.throwAnySpecFailures(result);
+			int port = this.serverPort;
+			serverManager.start(this.serverPort);
+        	setPortProperty(port);
+     		this.getLog().info("Executing Jasmine Specs");
+      		result = this.executeSpecs(new URL(this.uriScheme + "://" + this.serverHostname + ":" + port));
+     		this.logResults(result);
+      		this.throwAnySpecFailures(result);
+    } catch (Throwable t){
+    	int port = serverManager.start();
+    	setPortProperty(port);
+     	this.getLog().info("Executing Jasmine Specs");
+      	result  = this.executeSpecs(new URL(this.uriScheme + "://" + this.serverHostname + ":" + port));
+     	this.logResults(result);
+      	this.throwAnySpecFailures(result);
     } finally {
       if (!keepServerAlive) {
         serverManager.stop();
@@ -214,8 +222,8 @@ public class TestMojo extends AbstractJasmineMojo {
       ReporterType.JsApiReporter);
 
     ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(
-      this,
-      this.relativizesFilePaths,
+    		this,
+    		this.relativizesFilePaths,
       createsRunner);
 
     return new ServerManager(new Server(), getConnector(), configurator);
