@@ -3,7 +3,7 @@
 
   <groupId>com.github.searls</groupId>
   <artifactId>jasmine-maven-plugin</artifactId>
-  <version>2.2</version>
+  <version>2.2-custom</version>
   <packaging>maven-plugin</packaging>
 
   <name>jasmine-maven-plugin</name>
@@ -122,10 +122,16 @@
     <tag>jasmine-maven-plugin-2.2</tag>
   </scm>
   <distributionManagement>
-    <snapshotRepository>
+  <repository>
+        <id>internal.repo</id>
+        <name>Temporary Staging Repository</name>
+        <url>file://${project.build.directory}/mvn-repo</url>
+    </repository>
+<!--     <snapshotRepository>
       <id>ossrh</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
+     -->
   </distributionManagement>
   <issueManagement>
     <system>github</system>
@@ -146,6 +152,7 @@
     <java.version>1.6</java.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
+     <github.global.server>github</github.global.server>
   </properties>
 
   <prerequisites>
@@ -501,28 +508,23 @@
         <artifactId>site-maven-plugin</artifactId>
         <version>0.12</version>
         <configuration>
-          <message>Generating site for ${project.version}</message>
-          <server>github</server>
-          <noJekyll>true</noJekyll>
-        </configuration>
+                <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+                <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+                <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+                <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+                <includes><include>**/*</include></includes>
+                <merge>true</merge>                                        <!-- don't delete old artifacts -->
+                <repositoryName>jasmine-maven-plugin</repositoryName>      <!-- github repo name -->
+                <repositoryOwner>hollandjb</repositoryOwner>    <!-- github username  -->
+           </configuration>
         <executions>
           <execution>
             <goals>
               <goal>site</goal>
             </goals>
-            <phase>site-deploy</phase>
+            <phase>deploy</phase>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.7</version>
-        <extensions>true</extensions>
-        <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-        </configuration>
       </plugin>
     </plugins>
   </build>
