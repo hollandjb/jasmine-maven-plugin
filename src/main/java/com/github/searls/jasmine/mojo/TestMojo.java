@@ -194,6 +194,10 @@ public class TestMojo extends AbstractJasmineMojo {
 			int port = this.serverPort;
 			serverManager.start(this.serverPort);
         	setPortProperty(port);
+    } catch (Throwable t){
+    	int port = serverManager.start();
+    	setPortProperty(port);
+    }
      		this.getLog().info("Executing Jasmine Specs");
       		result = this.executeSpecs(new URL(this.uriScheme + "://" + this.serverHostname + ":" + port));
      		this.logResults(result);
