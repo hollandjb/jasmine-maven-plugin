@@ -341,7 +341,7 @@
             </delimiters>
           </configuration>
         </plugin>
-        <plugin>
+	<!--      <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
           <version>3.5.1</version>
@@ -359,7 +359,7 @@
               <version>1.7</version>
             </dependency>
           </dependencies>
-        </plugin>
+	</plugin> -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
